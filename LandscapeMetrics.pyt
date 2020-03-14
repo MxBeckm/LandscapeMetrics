@@ -11,7 +11,7 @@ class Toolbox(object):
 class LandscapeMetrics (object):
     def __init__(self):
         self.label       = "Calculate Proximity Index"
-        self.description = "The Proximity Index is measured by dividing " + \
+        self.description = "The Proximity Index is measured by deviding " + \
                            "the Distance to neighboring, features inside a pre defined area,  " + \
                            "trough the area of the feature itself."
 
@@ -168,7 +168,7 @@ class LandscapeMetrics (object):
                         # If the currect Row isnt the Row of the current Feature which we are looking at, then proceed :
                         if rows[3] != row[2]:
                             # If the Distance to the next Feature isnt 0, then proceed:
-                            # This is only the case in which the feature and its nearest feature, are sharing a border or are inside of eachother.
+                            # This is only the case in which the feature and its nearest feature, are sharing a border or are inside of eachother or there is no feature of the same class inside the buffer.
                             if rows[2] != 0:
                                 indexPXfg = indexPXfg + rows[0] / (rows[2] * rows[2])
                             listOfNearFeature = [rows[3], rows[0], rows[2]]
@@ -245,3 +245,5 @@ class LandscapeMetrics (object):
                     elif fieldnameClean == "PX94_" + str(bufferDistance):
                         arcpy.AddMessage("Index PX94 from feature ID " + str(row[2]) + " : " + str(indexPX94))
                 arcpy.AddMessage("*------------------------*")
+        # Deleting the fields NEAR_DIST and NEAR_FID since they only have values for the last calculated row
+        arcpy.DeleteField_management(inputFeatureClass, ["NEAR_DIST", "NEAR_FID"])
