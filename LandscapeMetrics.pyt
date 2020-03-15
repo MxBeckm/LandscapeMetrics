@@ -145,6 +145,7 @@ class LandscapeMetrics (object):
                 indexPX92 = 0
                 indexPX94 = 0
                 indexFG = 0
+                nnFID = 0
                 # Print the ID of the current Row(Feature)
                 arcpy.AddMessage("Id of the current Feature : " + str(row[2]))
 
@@ -208,8 +209,8 @@ class LandscapeMetrics (object):
                         # Use a search Cursor to calculate the PX94
                         with arcpy.da.SearchCursor(inputFeatureClass, ['SHAPE@Area' ,inputClassField,'OID@','NNDistance','NNArea', 'NNFID'], where_clause=expression1) as cursor4:
                             for row4 in cursor4:
-                                # If the Distance isnt 0 proceed
-                                if row4[3] != 0:
+                                # If the Distance isnt 0 proceed / this also makes sure that only feautures inside the buffer are selected, since features outside the buffer will have a distance of -1
+                                if row4[3] != 0 and row4[3] != -1:
                                     # The index is calculated by Sum of Area / NNDistance of every object in the cursor4
                                     dist92 = row4[3]
                                     area92 = row4[0]
